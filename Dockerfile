@@ -1,7 +1,13 @@
-FROM golang:latest
+FROM golang:latest AS builder
 
 WORKDIR /app
 
-COPY src /app
+COPY src .
 
-CMD ["go", "run", "."]
+RUN go build hello.go
+
+FROM scratch
+
+COPY --from=builder /app/hello /app
+
+CMD ["/app"]
